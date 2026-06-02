@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to GoSMS",
+        "description": "Enter your GoSMS API key. You can create one at [my.gosms.ru](https://my.gosms.ru) → API Integration → Create Key.\n\nMake sure the key has **devices:read** and **sms:send** permissions.",
+        "data": {
+          "api_key": "API Key"
+        },
+        "data_description": {
+          "api_key": "Your GoSMS API key (starts with gsk_…)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to GoSMS API. Check your internet connection.",
+      "invalid_auth": "Invalid API key. Please check the key and its permissions.",
+      "unknown": "Unexpected error. Check the Home Assistant logs for details."
+    },
+    "abort": {
+      "already_configured": "GoSMS is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery_level": {
+        "name": "Battery"
+      },
+      "sim_slot": {
+        "name": "Active SIM"
+      }
+    },
+    "binary_sensor": {
+      "is_online": {
+        "name": "Online"
+      },
+      "is_charging": {
+        "name": "Charging"
+      },
+      "can_send_sms": {
+        "name": "SMS Sending Enabled"
+      }
+    },
+    "notify": {
+      "gosms_send_sms": {
+        "name": "Send SMS"
+      }
+    }
+  }
+}
