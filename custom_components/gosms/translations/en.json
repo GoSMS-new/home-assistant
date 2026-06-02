@@ -8,7 +8,7 @@
           "api_key": "API Key"
         },
         "data_description": {
-          "api_key": "Your GoSMS API key (starts with gsk_…)"
+          "api_key": "Your GoSMS API key (starts with gosms_…)"
         }
       }
     },
