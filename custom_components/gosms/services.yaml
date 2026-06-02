@@ -34,7 +34,7 @@ send_sms:
       description: >
         If enabled, the SMS will be sent directly to the device without
         being saved in GoSMS history. Delivery status will not be tracked.
-      required: false
+      required: true
       default: false
       selector:
-        boolean:
+        checkbox:
