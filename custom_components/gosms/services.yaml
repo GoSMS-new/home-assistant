@@ -1,39 +1,22 @@
 send_sms:
-  name: Send SMS
-  description: >
-    Send an SMS message via GoSMS RU using your connected Android device.
-    The message is sent through your SIM card at your carrier's rate.
   fields:
     phone:
-      name: Phone number
-      description: >
-        Recipient phone number in international format (e.g. +79001234567).
       required: true
       example: "+79001234567"
       selector:
         text:
     message:
-      name: Message
-      description: SMS text content. Maximum 300 characters.
       required: true
       example: "Your verification code: 4521"
       selector:
         text:
           multiline: true
     device_id:
-      name: Device ID
-      description: >
-        UUID of the specific GoSMS RU device to send from.
-        Leave empty to let GoSMS RU pick any available online device automatically.
       required: false
       example: "550e8400-e29b-41d4-a716-446655440000"
       selector:
         text:
     no_store:
-      name: No store
-      description: >
-        If enabled, the SMS will be sent directly to the device without
-        being saved in GoSMS RU history. Delivery status will not be tracked.
       required: true
       default: false
       selector:
