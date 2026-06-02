@@ -1,4 +1,4 @@
-"""Sensor platform for GoSMS — device battery and status metrics."""
+"""Sensor platform for GoSMS RU — device battery and status metrics."""
 from __future__ import annotations
 
 import logging
@@ -43,7 +43,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up GoSMS sensor entities from a config entry."""
+    """Set up GoSMS RU sensor entities from a config entry."""
     coordinator: GoSMSCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     entities: list[GoSMSSensor] = []
@@ -70,7 +70,7 @@ def _device_display_name(device: dict[str, Any]) -> str:
 
 
 class GoSMSSensor(CoordinatorEntity[GoSMSCoordinator], SensorEntity):
-    """A sensor entity representing one metric of a GoSMS device."""
+    """A sensor entity representing one metric of a GoSMS RU device."""
 
     _attr_has_entity_name = True
 
@@ -104,7 +104,7 @@ class GoSMSSensor(CoordinatorEntity[GoSMSCoordinator], SensorEntity):
         return DeviceInfo(
             identifiers={(DOMAIN, self._device_id)},
             name=_device_display_name(device),
-            manufacturer="GoSMS",
+            manufacturer="GoSMS RU",
             model=device.get("type", "Android"),
             hw_version=sim_names,
             configuration_url="https://my.gosms.ru",

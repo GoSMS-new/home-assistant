@@ -1,4 +1,4 @@
-"""Binary sensor platform for GoSMS — device online/offline and charging."""
+"""Binary sensor platform for GoSMS RU — device online/offline and charging."""
 from __future__ import annotations
 
 import logging
@@ -45,7 +45,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up GoSMS binary sensor entities from a config entry."""
+    """Set up GoSMS RU binary sensor entities from a config entry."""
     coordinator: GoSMSCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     entities: list[GoSMSBinarySensor] = []
@@ -60,7 +60,7 @@ async def async_setup_entry(
 
 
 class GoSMSBinarySensor(CoordinatorEntity[GoSMSCoordinator], BinarySensorEntity):
-    """A binary sensor entity for a GoSMS device boolean metric."""
+    """A binary sensor entity for a GoSMS RU device boolean metric."""
 
     _attr_has_entity_name = True
 
@@ -89,7 +89,7 @@ class GoSMSBinarySensor(CoordinatorEntity[GoSMSCoordinator], BinarySensorEntity)
         return DeviceInfo(
             identifiers={(DOMAIN, self._device_id)},
             name=_device_display_name(device),
-            manufacturer="GoSMS",
+            manufacturer="GoSMS RU",
             model=device.get("type", "Android"),
             configuration_url="https://my.gosms.ru",
         )

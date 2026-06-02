@@ -1,4 +1,4 @@
-"""DataUpdateCoordinator for GoSMS."""
+"""DataUpdateCoordinator for GoSMS RU."""
 from __future__ import annotations
 
 import logging
@@ -17,7 +17,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class GoSMSCoordinator(DataUpdateCoordinator[list[dict[str, Any]]]):
-    """Coordinator that polls the GoSMS API for device data."""
+    """Coordinator that polls the GoSMS RU API for device data."""
 
     def __init__(
         self,
@@ -35,13 +35,13 @@ class GoSMSCoordinator(DataUpdateCoordinator[list[dict[str, Any]]]):
         self.client = client
 
     async def _async_update_data(self) -> list[dict[str, Any]]:
-        """Fetch device list from GoSMS API."""
+        """Fetch device list from GoSMS RU API."""
         try:
             devices = await self.client.get_devices()
-            _LOGGER.debug("Fetched %d devices from GoSMS", len(devices))
+            _LOGGER.debug("Fetched %d devices from GoSMS RU", len(devices))
             return devices
         except GoSMSAuthError as err:
             # Auth failure → HA shows "re-auth required" UI automatically
-            raise ConfigEntryAuthFailed("GoSMS API key is invalid") from err
+            raise ConfigEntryAuthFailed("GoSMS RU API key is invalid") from err
         except (GoSMSConnectionError, GoSMSApiError) as err:
-            raise UpdateFailed(f"GoSMS API error: {err}") from err
+            raise UpdateFailed(f"GoSMS RU API error: {err}") from err

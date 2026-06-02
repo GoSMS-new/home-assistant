@@ -1,4 +1,4 @@
-"""Notify platform for GoSMS — send SMS from automations."""
+"""Notify platform for GoSMS RU — send SMS from automations."""
 from __future__ import annotations
 
 import logging
@@ -20,13 +20,13 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up GoSMS notify entity."""
+    """Set up GoSMS RU notify entity."""
     coordinator: GoSMSCoordinator = hass.data[DOMAIN][config_entry.entry_id]
     async_add_entities([GoSMSNotifyEntity(coordinator, config_entry.entry_id)])
 
 
 class GoSMSNotifyEntity(NotifyEntity):
-    """Notify entity that sends SMS via GoSMS.
+    """Notify entity that sends SMS via GoSMS RU.
 
     Usage in automations:
         service: notify.gosms_send_sms
@@ -61,7 +61,7 @@ class GoSMSNotifyEntity(NotifyEntity):
             target: List of phone numbers to send to.
             data:
                 device_id (str): Optional device UUID to send from.
-                no_store (bool): If True, SMS won't be saved in GoSMS history.
+                no_store (bool): If True, SMS won't be saved in GoSMS RU history.
         """
         data = data or {}
         device_id: str | None = data.get("device_id")
@@ -70,7 +70,7 @@ class GoSMSNotifyEntity(NotifyEntity):
         phones = target or []
         if not phones:
             _LOGGER.error(
-                "GoSMS notify: no target phone number provided. "
+                "GoSMS RU notify: no target phone number provided. "
                 "Set 'target' to a list of phone numbers."
             )
             return
@@ -84,10 +84,10 @@ class GoSMSNotifyEntity(NotifyEntity):
                     no_store=no_store,
                 )
                 _LOGGER.info(
-                    "GoSMS: SMS sent to %s, message id=%s, status=%s",
+                    "GoSMS RU: SMS sent to %s, message id=%s, status=%s",
                     phone,
                     result.get("id"),
                     result.get("status"),
                 )
             except Exception as err:  # noqa: BLE001
-                _LOGGER.error("GoSMS: failed to send SMS to %s: %s", phone, err)
+                _LOGGER.error("GoSMS RU: failed to send SMS to %s: %s", phone, err)

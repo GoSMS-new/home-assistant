@@ -1,7 +1,7 @@
 send_sms:
   name: Send SMS
   description: >
-    Send an SMS message via GoSMS using your connected Android device.
+    Send an SMS message via GoSMS RU using your connected Android device.
     The message is sent through your SIM card at your carrier's rate.
   fields:
     phone:
@@ -23,8 +23,8 @@ send_sms:
     device_id:
       name: Device ID
       description: >
-        UUID of the specific GoSMS device to send from.
-        Leave empty to let GoSMS pick any available online device automatically.
+        UUID of the specific GoSMS RU device to send from.
+        Leave empty to let GoSMS RU pick any available online device automatically.
       required: false
       example: "550e8400-e29b-41d4-a716-446655440000"
       selector:
@@ -33,7 +33,7 @@ send_sms:
       name: No store
       description: >
         If enabled, the SMS will be sent directly to the device without
-        being saved in GoSMS history. Delivery status will not be tracked.
+        being saved in GoSMS RU history. Delivery status will not be tracked.
       required: true
       default: false
       selector:

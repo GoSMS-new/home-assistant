@@ -1,4 +1,4 @@
-"""Config flow for GoSMS integration."""
+"""Config flow for GoSMS RU integration."""
 from __future__ import annotations
 
 import logging
@@ -23,7 +23,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 
 
 class GoSMSConfigFlow(ConfigFlow, domain=DOMAIN):
-    """Handle the GoSMS config flow."""
+    """Handle the GoSMS RU config flow."""
 
     VERSION = 1
 
@@ -43,7 +43,7 @@ class GoSMSConfigFlow(ConfigFlow, domain=DOMAIN):
             try:
                 devices = await client.get_devices()
                 _LOGGER.info(
-                    "GoSMS config flow: validated API key, found %d device(s)",
+                    "GoSMS RU config flow: validated API key, found %d device(s)",
                     len(devices),
                 )
             except GoSMSAuthError:
@@ -51,7 +51,7 @@ class GoSMSConfigFlow(ConfigFlow, domain=DOMAIN):
             except GoSMSConnectionError:
                 errors["base"] = ERROR_CANNOT_CONNECT
             except Exception:  # noqa: BLE001
-                _LOGGER.exception("Unexpected error during GoSMS config flow")
+                _LOGGER.exception("Unexpected error during GoSMS RU config flow")
                 errors["base"] = ERROR_UNKNOWN
             else:
                 # Unique ID prevents duplicate entries
@@ -59,7 +59,7 @@ class GoSMSConfigFlow(ConfigFlow, domain=DOMAIN):
                 self._abort_if_unique_id_configured()
 
                 return self.async_create_entry(
-                    title="GoSMS",
+                    title="GoSMS RU",
                     data={CONF_API_KEY: api_key},
                 )
 

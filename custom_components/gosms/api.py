@@ -1,4 +1,4 @@
-"""GoSMS API client."""
+"""GoSMS RU API client."""
 from __future__ import annotations
 
 import aiohttp
@@ -23,7 +23,7 @@ class GoSMSApiError(Exception):
 
 
 class GoSMSApiClient:
-    """Async client for the GoSMS REST API."""
+    """Async client for the GoSMS RU REST API."""
 
     def __init__(self, api_key: str, session: aiohttp.ClientSession) -> None:
         self._api_key = api_key
@@ -37,7 +37,7 @@ class GoSMSApiClient:
         }
 
     async def get_devices(self) -> list[dict[str, Any]]:
-        """Fetch all devices from the GoSMS API."""
+        """Fetch all devices from the GoSMS RU API."""
         try:
             async with self._session.get(
                 API_ENDPOINT_DEVICES,
@@ -53,9 +53,9 @@ class GoSMSApiClient:
                     )
                 return await response.json()
         except aiohttp.ClientConnectorError as err:
-            raise GoSMSConnectionError(f"Cannot connect to GoSMS API: {err}") from err
+            raise GoSMSConnectionError(f"Cannot connect to GoSMS RU API: {err}") from err
         except aiohttp.ClientError as err:
-            raise GoSMSConnectionError(f"GoSMS API request failed: {err}") from err
+            raise GoSMSConnectionError(f"GoSMS RU API request failed: {err}") from err
 
     async def send_sms(
         self,
@@ -64,7 +64,7 @@ class GoSMSApiClient:
         device_id: str | None = None,
         no_store: bool = False,
     ) -> dict[str, Any]:
-        """Send an SMS via the GoSMS API."""
+        """Send an SMS via the GoSMS RU API."""
         payload: dict[str, Any] = {
             "phone": phone,
             "message": message,
@@ -89,6 +89,6 @@ class GoSMSApiClient:
                     )
                 return await response.json()
         except aiohttp.ClientConnectorError as err:
-            raise GoSMSConnectionError(f"Cannot connect to GoSMS API: {err}") from err
+            raise GoSMSConnectionError(f"Cannot connect to GoSMS RU API: {err}") from err
         except aiohttp.ClientError as err:
-            raise GoSMSConnectionError(f"GoSMS API request failed: {err}") from err
+            raise GoSMSConnectionError(f"GoSMS RU API request failed: {err}") from err

@@ -1,4 +1,4 @@
-"""GoSMS Home Assistant Integration.
+"""GoSMS RU Home Assistant Integration.
 
 Provides:
   - Sensor entities: battery level, active SIM slot per device
@@ -38,7 +38,7 @@ SERVICE_SEND_SMS_SCHEMA = vol.Schema(
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up GoSMS from a config entry.
+    """Set up GoSMS RU from a config entry.
 
     Creates the API client, coordinator, performs first refresh,
     sets up all entity platforms and registers services.
@@ -72,20 +72,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 no_store=no_store,
             )
             _LOGGER.info(
-                "GoSMS service: SMS sent to %s, id=%s, status=%s",
+                "GoSMS RU service: SMS sent to %s, id=%s, status=%s",
                 phone,
                 result.get("id"),
                 result.get("status"),
             )
         except GoSMSAuthError:
             _LOGGER.error(
-                "GoSMS service: authentication failed — check your API key "
-                "in Settings → Integrations → GoSMS"
+                "GoSMS RU service: authentication failed — check your API key "
+                "in Settings → Integrations → GoSMS RU"
             )
         except GoSMSConnectionError as err:
-            _LOGGER.error("GoSMS service: connection error: %s", err)
+            _LOGGER.error("GoSMS RU service: connection error: %s", err)
         except Exception as err:  # noqa: BLE001
-            _LOGGER.error("GoSMS service: unexpected error: %s", err)
+            _LOGGER.error("GoSMS RU service: unexpected error: %s", err)
 
     hass.services.async_register(
         DOMAIN,
@@ -95,14 +95,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     )
 
     _LOGGER.info(
-        "GoSMS integration loaded: %d device(s) found",
+        "GoSMS RU integration loaded: %d device(s) found",
         len(coordinator.data) if coordinator.data else 0,
     )
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Unload a GoSMS config entry."""
+    """Unload a GoSMS RU config entry."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
         hass.data[DOMAIN].pop(entry.entry_id)
