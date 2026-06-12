@@ -1,5 +1,7 @@
 # GoSMS RU — интеграция для Home Assistant
 
+![GoSMS RU + Home Assistant](images/gosms-home-assistant.png)
+
 Отправка SMS из Home Assistant через ваш Android-смартфон с приложением
 [GoSMS Client](https://gosms.ru). Сообщения уходят через вашу SIM-карту по
 тарифу вашего оператора — без SMS-агрегаторов и посредников.
