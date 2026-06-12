@@ -10,6 +10,16 @@
         "data_description": {
           "api_key": "Ваш API-ключ GoSMS RU (начинается с gosms_…)"
         }
+      },
+      "reauth_confirm": {
+        "title": "Повторная авторизация GoSMS RU",
+        "description": "Ваш API-ключ GoSMS RU больше не действует (истёк или отозван). Создайте новый ключ на [my.gosms.ru](https://my.gosms.ru) → API Интеграция и введите его ниже.",
+        "data": {
+          "api_key": "API-ключ"
+        },
+        "data_description": {
+          "api_key": "Новый API-ключ GoSMS RU (начинается с gosms_…)"
+        }
       }
     },
     "error": {
@@ -18,7 +28,8 @@
       "unknown": "Неизвестная ошибка. Подробности — в логах Home Assistant."
     },
     "abort": {
-      "already_configured": "GoSMS RU уже настроен."
+      "already_configured": "GoSMS RU уже настроен.",
+      "reauth_successful": "Повторная авторизация выполнена."
     }
   },
   "entity": {
@@ -40,11 +51,6 @@
       "can_send_sms": {
         "name": "Отправка SMS включена"
       }
-    },
-    "notify": {
-      "gosms_send_sms": {
-        "name": "Отправить SMS"
-      }
     }
   },
   "services": {
@@ -58,16 +64,24 @@
         },
         "message": {
           "name": "Сообщение",
-          "description": "Текст SMS. Максимум 300 символов."
+          "description": "Текст SMS. Максимум 170 символов."
         },
         "device_id": {
           "name": "ID устройства",
           "description": "UUID конкретного устройства GoSMS RU для отправки. Оставьте пустым — система выберет любое доступное онлайн-устройство автоматически."
         },
         "no_store": {
-          "name": "Не сохранять",
-          "description": "Если включено, SMS отправляется напрямую на устройство без сохранения в истории GoSMS RU. Статус доставки отслеживаться не будет."
+          "name": "История сообщений",
+          "description": "Сохранять ли отправленное SMS в истории GoSMS RU. «Не сохранять» — сообщение уходит напрямую на устройство, статус доставки не отслеживается."
         }
+      }
+    }
+  },
+  "selector": {
+    "no_store": {
+      "options": {
+        "store": "Сохранять в истории",
+        "no_store": "Не сохранять (напрямую)"
       }
     }
   }

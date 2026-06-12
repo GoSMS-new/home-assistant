@@ -14,7 +14,7 @@ send_sms:
         text:
     message:
       name: Message
-      description: SMS text content. Maximum 300 characters.
+      description: SMS text content. Maximum 170 characters.
       required: true
       example: "Your verification code: 4521"
       selector:
@@ -29,12 +29,25 @@ send_sms:
       example: "550e8400-e29b-41d4-a716-446655440000"
       selector:
         text:
+    # Выпадающий список вместо свитча. Значения 'store' / 'no_store'
+    # конвертируются в bool в __init__.py (_coerce_no_store); YAML-вариант
+    # no_store: true/false тоже принимается. Подписи пунктов — в переводах:
+    # strings.json / translations → selector.no_store.options.
+    # required + default: обязательное поле с дефолтом — HA не рисует
+    # чекбокс «включить поле», список сразу стоит на «Сохранять в истории».
     no_store:
-      name: No store
+      name: Message history
       description: >
-        If enabled, the SMS will be sent directly to the device without
-        being saved in GoSMS RU history. Delivery status will not be tracked.
+        Whether to save the sent SMS in GoSMS RU history. "Don't save"
+        sends the message directly to the device — delivery status
+        will not be tracked.
       required: true
-      default: false
+      default: store
+      example: store
       selector:
-        checkbox:
+        select:
+          mode: dropdown
+          translation_key: no_store
+          options:
+            - store
+            - no_store

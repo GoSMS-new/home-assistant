@@ -3,12 +3,14 @@
 Provides:
   - Sensor entities: battery level, active SIM slot per device
   - Binary sensor entities: online status, charging, SMS enabled per device
-  - Notify entity: send SMS via automation / service call
-  - gosms.send_sms service: rich SMS sending with device targeting
+  - gosms.send_sms service: SMS sending with device targeting
+    (вызывается из автоматизаций и скриптов)
 """
 from __future__ import annotations
 
 import logging
+from typing import Any
+
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
@@ -23,16 +25,36 @@ from .coordinator import GoSMSCoordinator
 _LOGGER = logging.getLogger(__name__)
 
 # Platforms that this integration provides
-PLATFORMS = ["sensor", "binary_sensor", "notify"]
+PLATFORMS = ["sensor", "binary_sensor"]
 
 # Schema for the gosms.send_sms service
 SERVICE_SEND_SMS = "send_sms"
+
+
+def _coerce_no_store(value: Any) -> bool:
+    """Привести no_store к bool.
+
+    Выпадающий список в UI шлёт строки 'store' / 'no_store',
+    в YAML-автоматизациях допустимы и обычные true / false.
+    """
+    if value == "no_store":
+        return True
+    if value == "store":
+        return False
+    return cv.boolean(value)
+
+
+# Лимит длины SMS в GoSMS RU
+MESSAGE_MAX_LENGTH = 170
+
 SERVICE_SEND_SMS_SCHEMA = vol.Schema(
     {
         vol.Required("phone"): cv.string,
-        vol.Required("message"): cv.string,
+        vol.Required("message"): vol.All(
+            cv.string, vol.Length(min=1, max=MESSAGE_MAX_LENGTH)
+        ),
         vol.Optional("device_id"): cv.string,
-        vol.Optional("no_store", default=False): cv.boolean,
+        vol.Optional("no_store", default=False): _coerce_no_store,
     }
 )
 

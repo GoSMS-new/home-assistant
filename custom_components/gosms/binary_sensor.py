@@ -21,20 +21,22 @@ from .sensor import _device_display_name
 
 _LOGGER = logging.getLogger(__name__)
 
+# Имена берутся из переводов по translation_key:
+# strings.json / translations → entity.binary_sensor.<translation_key>.name
 BINARY_SENSOR_DESCRIPTIONS: tuple[BinarySensorEntityDescription, ...] = (
     BinarySensorEntityDescription(
         key="is_online",
-        name="Online",
+        translation_key="is_online",
         device_class=BinarySensorDeviceClass.CONNECTIVITY,
     ),
     BinarySensorEntityDescription(
         key="is_charging",
-        name="Charging",
+        translation_key="is_charging",
         device_class=BinarySensorDeviceClass.BATTERY_CHARGING,
     ),
     BinarySensorEntityDescription(
         key="can_send_sms",
-        name="SMS Sending Enabled",
+        translation_key="can_send_sms",
         icon="mdi:message-check",
     ),
 )
@@ -45,18 +47,29 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up GoSMS RU binary sensor entities from a config entry."""
-    coordinator: GoSMSCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    """Set up GoSMS RU binary sensor entities from a config entry.
 
-    entities: list[GoSMSBinarySensor] = []
-    if coordinator.data:
-        for device in coordinator.data:
+    Подписывается на coordinator: устройства, появившиеся в аккаунте
+    после запуска HA, тоже получают сущности — без перезагрузки.
+    """
+    coordinator: GoSMSCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    known_devices: set[str] = set()
+
+    def _add_new_devices() -> None:
+        new_entities: list[GoSMSBinarySensor] = []
+        for device in coordinator.data or []:
+            if device["id"] in known_devices:
+                continue
+            known_devices.add(device["id"])
             for description in BINARY_SENSOR_DESCRIPTIONS:
-                entities.append(
+                new_entities.append(
                     GoSMSBinarySensor(coordinator, device["id"], description)
                 )
+        if new_entities:
+            async_add_entities(new_entities)
 
-    async_add_entities(entities)
+    _add_new_devices()
+    config_entry.async_on_unload(coordinator.async_add_listener(_add_new_devices))
 
 
 class GoSMSBinarySensor(CoordinatorEntity[GoSMSCoordinator], BinarySensorEntity):

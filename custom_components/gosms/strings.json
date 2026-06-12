@@ -10,6 +10,16 @@
         "data_description": {
           "api_key": "Your GoSMS RU API key (starts with gosms_…)"
         }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate GoSMS RU",
+        "description": "Your GoSMS RU API key is no longer valid (expired or revoked). Create a new key at [my.gosms.ru](https://my.gosms.ru) → API Integration and enter it below.",
+        "data": {
+          "api_key": "API Key"
+        },
+        "data_description": {
+          "api_key": "Your new GoSMS RU API key (starts with gosms_…)"
+        }
       }
     },
     "error": {
@@ -18,7 +28,29 @@
       "unknown": "Unexpected error. Check the Home Assistant logs for details."
     },
     "abort": {
-      "already_configured": "GoSMS RU is already configured."
+      "already_configured": "GoSMS RU is already configured.",
+      "reauth_successful": "Re-authentication was successful."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery_level": {
+        "name": "Battery"
+      },
+      "sim_slot": {
+        "name": "Active SIM"
+      }
+    },
+    "binary_sensor": {
+      "is_online": {
+        "name": "Online"
+      },
+      "is_charging": {
+        "name": "Charging"
+      },
+      "can_send_sms": {
+        "name": "SMS Sending Enabled"
+      }
     }
   },
   "services": {
@@ -32,16 +64,24 @@
         },
         "message": {
           "name": "Message",
-          "description": "SMS text content. Maximum 300 characters."
+          "description": "SMS text content. Maximum 170 characters."
         },
         "device_id": {
           "name": "Device ID",
           "description": "UUID of the specific GoSMS RU device to send from. Leave empty to let GoSMS RU pick any available online device automatically."
         },
         "no_store": {
-          "name": "No store",
-          "description": "If enabled, the SMS will be sent directly to the device without being saved in GoSMS RU history. Delivery status will not be tracked."
+          "name": "Message history",
+          "description": "Whether to save the sent SMS in GoSMS RU history. \"Don't save\" sends the message directly to the device — delivery status will not be tracked."
         }
+      }
+    }
+  },
+  "selector": {
+    "no_store": {
+      "options": {
+        "store": "Save to history",
+        "no_store": "Don't save (send directly)"
       }
     }
   }

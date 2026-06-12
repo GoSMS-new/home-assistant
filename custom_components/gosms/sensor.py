@@ -21,18 +21,20 @@ from .coordinator import GoSMSCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-# Sensor descriptions — one per metric we expose per device
+# Sensor descriptions — one per metric we expose per device.
+# Имена берутся из переводов по translation_key:
+# strings.json / translations → entity.sensor.<translation_key>.name
 SENSOR_DESCRIPTIONS: tuple[SensorEntityDescription, ...] = (
     SensorEntityDescription(
         key="battery_level",
-        name="Battery",
+        translation_key="battery_level",
         device_class=SensorDeviceClass.BATTERY,
         native_unit_of_measurement="%",
         state_class=SensorStateClass.MEASUREMENT,
     ),
     SensorEntityDescription(
         key="sim_slot",
-        name="Active SIM",
+        translation_key="sim_slot",
         icon="mdi:sim",
     ),
 )
@@ -43,16 +45,29 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up GoSMS RU sensor entities from a config entry."""
+    """Set up GoSMS RU sensor entities from a config entry.
+
+    Подписывается на coordinator: устройства, появившиеся в аккаунте
+    после запуска HA, тоже получают сущности — без перезагрузки.
+    """
     coordinator: GoSMSCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    known_devices: set[str] = set()
 
-    entities: list[GoSMSSensor] = []
-    if coordinator.data:
-        for device in coordinator.data:
+    def _add_new_devices() -> None:
+        new_entities: list[GoSMSSensor] = []
+        for device in coordinator.data or []:
+            if device["id"] in known_devices:
+                continue
+            known_devices.add(device["id"])
             for description in SENSOR_DESCRIPTIONS:
-                entities.append(GoSMSSensor(coordinator, device["id"], description))
+                new_entities.append(
+                    GoSMSSensor(coordinator, device["id"], description)
+                )
+        if new_entities:
+            async_add_entities(new_entities)
 
-    async_add_entities(entities)
+    _add_new_devices()
+    config_entry.async_on_unload(coordinator.async_add_listener(_add_new_devices))
 
 
 def _sim_slot_label(selected_sim: int) -> str:
