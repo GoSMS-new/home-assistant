@@ -1,0 +1,53 @@
+send_sms:
+  name: Send SMS
+  description: >
+    Send an SMS message via GoSMS RU using your connected Android device.
+    The message is sent through your SIM card at your carrier's rate.
+  fields:
+    phone:
+      name: Phone number
+      description: >
+        Recipient phone number in international format (e.g. +79001234567).
+      required: true
+      example: "+79001234567"
+      selector:
+        text:
+    message:
+      name: Message
+      description: SMS text content. Maximum 170 characters.
+      required: true
+      example: "Your verification code: 4521"
+      selector:
+        text:
+          multiline: true
+    device_id:
+      name: Device ID
+      description: >
+        UUID of the specific GoSMS RU device to send from.
+        Leave empty to let GoSMS RU pick any available online device automatically.
+      required: false
+      example: "550e8400-e29b-41d4-a716-446655440000"
+      selector:
+        text:
+    # Выпадающий список вместо свитча. Значения 'store' / 'no_store'
+    # конвертируются в bool в __init__.py (_coerce_no_store); YAML-вариант
+    # no_store: true/false тоже принимается. Подписи пунктов — в переводах:
+    # strings.json / translations → selector.no_store.options.
+    # required + default: обязательное поле с дефолтом — HA не рисует
+    # чекбокс «включить поле», список сразу стоит на «Сохранять в истории».
+    no_store:
+      name: Message history
+      description: >
+        Whether to save the sent SMS in GoSMS RU history. "Don't save"
+        sends the message directly to the device — delivery status
+        will not be tracked.
+      required: true
+      default: store
+      example: store
+      selector:
+        select:
+          mode: dropdown
+          translation_key: no_store
+          options:
+            - store
+            - no_store
